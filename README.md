@@ -1,5 +1,4 @@
 # Flight Data Analysis
-##  New York Flights & Weather — Data Quality, Integration & Analysis  
 
 ##  About  
 This project analyzes flight operations at New York airports (JFK, LGA, EWR) between 2015 and 2024 by integrating BTS flight data with Mesonet weather data.It includes data quality checks, cleansing, and integration to ensure reliable datasets. 
@@ -48,11 +47,32 @@ These datasets were chosen to **combine operational flight records with environm
 ---
 
 ## Tools & Technologies  
-- **RStudio** → Data preprocessing, data quality checks, and cleansing.  
-- **Apache Hadoop (HDFS)** → Distributed data storage.  
-- **Hive** → SQL-like querying for flight & weather datasets at scale.  
-- **DbSchema** → Schema design and visualization (constellation schema).  
-- **Tableau** → Dashboarding and visualization of insights.  
+- **RStudio** → Data quality checks, cleansing, preprocessing  
+- **HDFS (Hadoop Distributed File System)** → Large-scale storage  
+- **Hive** → Data warehouse schema, querying, and integration  
+- **DbSchema** → Schema modeling and visualization  
+- **Tableau** → BI dashboards and visualizations   
+
+---
+
+##  Schema Design — Constellation Schema  
+
+The project follows **Kimball’s dimensional modeling** approach using a **constellation schema** with shared conformed dimensions.  
+
+###  Dimension Tables  
+- **dim_time** → Date, Year, Month  
+- **dim_airport** → Airport code and name (role-played as Origin/Destination)  
+- **dim_airline** → Carrier code and name  
+- **dim_weather** → Weather station, weather codes, precipitation, hour  
+- **dim_cancellation** → Cancellation codes (A–D) with reason text  
+
+###  Fact Tables  
+- **fact_departures** → Flight departures (date, airport, airline, delay details)  
+- **fact_delays** → Delayed departures (linked to weather & carrier)  
+- **fact_cancellations** → Cancelled flights (linked to reasons)  
+- **fact_diversions** → Diverted flights (arrival airport, carrier)  
+
+Each fact table is linked to conformed dimensions (Time, Airport, Airline, Weather) ensuring **consistency and flexibility**.  
 
 ---
 
@@ -63,13 +83,16 @@ These datasets were chosen to **combine operational flight records with environm
    - Collected Mesonet historical weather datasets for the same timeframe.  
 
 2. **Data Quality & Cleansing (R)**  
-   - Checked for missing values, duplicates, and inconsistencies.  
+   - Checked for missing values, duplicates, range, validity, outliers and inconsistencies.  
    - Standardized formats (e.g., date/time, airport codes, airline codes).  
    - Handled outliers in delay and cancellation fields.  
 
 3. **Data Integration (Hive)**  
-   - Imported cleaned data into Hive tables.  
-   - Designed a **constellation schema** with shared conformed dimensions (Time, Airport, Airline, Weather).  
+   - Raw and cleaned data stored in Hadoop HDFS.
+   - Imported cleaned data into Hive tables.
+   - Created staging tables (`bts_staging`, `weather_staging`) and performed joins to create **merged_flights**. 
+   - Designed a **constellation schema** with shared conformed dimensions (Time, Airport, Airline, Weather).
+   - Designed **dimension** and **fact tables** in Hive and populated them from merged data.  
    - Executed queries to directly address business questions.  
 
 4. **Analysis & Querying**  
@@ -83,7 +106,7 @@ These datasets were chosen to **combine operational flight records with environm
      - Airline and airport cancellation comparisons.  
      - Weather-related disruptions.  
      - Trends in diverted flights.
-
+ 
 ---
        
 ## Deliverables
@@ -100,7 +123,3 @@ These datasets were chosen to **combine operational flight records with environm
 - Identification of top airlines and airports with highest disruptions.  
 - Seasonal and monthly variations in diversions and cancellations.
 
-
-
-## License
-This project is for academic purposes under the ADMP 2024/25 assessment.
