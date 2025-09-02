@@ -1,0 +1,14 @@
+Field,Missing_Count,Missing_Percent
+station,0,0
+valid,0,0
+tmpf,39,0.01
+dwpf,47,0.02
+drct,5900,1.95
+sknt,234,0.08
+mslp,40604,13.44
+p01i,27574,9.12
+vsby,39,0.01
+gust,248597,82.26
+wxcodes,243444,80.56
+valid_date,0,0
+valid_hour,0,0
